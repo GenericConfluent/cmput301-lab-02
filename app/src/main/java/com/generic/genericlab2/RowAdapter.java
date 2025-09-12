@@ -3,34 +3,34 @@ package com.generic.genericlab2;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
 import java.util.ArrayList;
 
-public class RowAdapter extends ListAdapter<String, RowViewHolder> {
-    ArrayList<String> cities;
-
+public class RowAdapter extends ListAdapter<RowData, RowViewHolder> {
     // Maybe this is implemented somewhere but I couldn't find it.
-    static DiffUtil.ItemCallback<String> STRING_DIFF = new DiffUtil.ItemCallback<String>() {
+    static DiffUtil.ItemCallback<RowData> DATA_DIFF = new DiffUtil.ItemCallback<RowData>() {
         @Override
-        public boolean areItemsTheSame(@NonNull String oldItem, @NonNull String newItem) {
-            // Probably a better way to do this but I don't know if objects store
-            // ids.
-            return oldItem.equals(newItem);
+        public boolean areItemsTheSame(@NonNull RowData oldItem, @NonNull RowData newItem) {
+            return oldItem.getId() == newItem.getId();
         }
 
         @Override
-        public boolean areContentsTheSame(@NonNull String oldItem, @NonNull String newItem) {
-            return oldItem.equals(newItem);
+        public boolean areContentsTheSame(@NonNull RowData oldItem, @NonNull RowData newItem) {
+            return oldItem.cityName.equals(newItem.cityName);
         }
     };
 
-    public RowAdapter(ArrayList<String> cities) {
-         super(STRING_DIFF);
-         this.cities = cities;
+    public interface DeleteCallback {
+        void delete(int uid);
+    }
+    final private DeleteCallback deleteCallback;
+
+    public RowAdapter(DeleteCallback deleteCallback) {
+         super(DATA_DIFF);
+         this.deleteCallback = deleteCallback;
     }
 
     @NonNull
@@ -46,14 +46,10 @@ public class RowAdapter extends ListAdapter<String, RowViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull RowViewHolder holder, int position) {
-        holder.bind(cities.get(position), (view) -> {
-            cities.remove(position);
-            this.notifyItemRemoved(position);
+        RowData rowData = this.getCurrentList().get(position);
+        int id = rowData.getId();
+        holder.bind(rowData.cityName, (_view) -> {
+            this.deleteCallback.delete(id);
         });
-    }
-
-    @Override
-    public int getItemCount() {
-        return cities.size();
     }
 }

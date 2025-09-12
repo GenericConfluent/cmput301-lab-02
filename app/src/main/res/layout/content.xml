@@ -2,6 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginRight="10dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center">
 
     <TextView
@@ -9,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="20dp"
-        android:text="sample_text"
+        android:text="err"
         android:gravity="center"
         android:textSize="40sp">
     </TextView>
@@ -24,7 +26,8 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_weight="0"
-        android:src="@android:drawable/ic_delete"
+        android:src="@drawable/outline_close_24"
         android:background="?attr/selectableItemBackgroundBorderless"
+        app:tint="?attr/colorPrimary"
         />
 </LinearLayout>
